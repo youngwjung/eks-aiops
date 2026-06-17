@@ -1,0 +1,16 @@
+project             = "eks-aiops"
+eks_cluster_version = "1.35"
+
+# Helm 차트 버전
+prometheus_operator_crds_chart_version     = "29.0.0"
+karpenter_chart_version                    = "1.12.1"
+aws_load_balancer_controller_chart_version = "3.4.0"
+envoy_gateway_chart_version                = "1.7.4"
+kube_prometheus_stack_chart_version        = "86.2.2"
+thanos_chart_version                       = "0.18.0"
+loki_chart_version                         = "17.4.0"
+k8s_monitoring_chart_version               = "4.1.5"
+tempo_distributed_chart_version            = "2.25.2"
+gitlab_chart_version                       = "10.0.2"
+argocd_chart_version                       = "9.5.21"
+mattermost_operator_chart_version          = "1.0.5"

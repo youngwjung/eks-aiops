@@ -1,0 +1,20 @@
+storage:
+  trace:
+    backend: s3
+    s3:
+      bucket: ${s3_bucket}
+      endpoint: ${s3_endpoint}
+traces:
+  otlp:
+    grpc:
+      enabled: true
+    http:
+      enabled: true
+metricsGenerator:
+  enabled: true
+overrides:
+  defaults:
+    metrics_generator:
+      processors:
+      - service-graphs
+      - local-blocks

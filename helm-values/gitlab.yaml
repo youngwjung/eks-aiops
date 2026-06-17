@@ -1,0 +1,82 @@
+global:
+  edition: ce
+  hosts:
+    domain: ${domain}
+  gatewayApi:
+    gatewayRef:
+      name: ${gateway_name}
+      namespace: ${gateway_namespace}
+      sectionName: ${gateway_listener}
+    configureCertmanager: false
+    installEnvoy: false
+  psql:
+    host: ${db_host}
+    username: ${db_username}
+    database: gitlab
+    password:
+      secret: ${db_secret}
+      key: password
+  redis:
+    host: ${redis_host}
+    auth:
+      enabled: false
+  appConfig:
+    object_store:
+      enabled: true
+      connection:
+        secret: ${s3_secret}
+        key: config
+  registry:
+    enabled: false
+installCertmanager: false
+gitlab:
+  webservice:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+    hpa:
+      cpu:
+        targetType: Utilization
+        targetAverageUtilization: 80
+    gatewayRoute:
+      sectionName: ${gateway_listener}
+  kas:
+    gatewayRoute:
+      sectionName: ${gateway_listener}
+  sidekiq:
+    resources:
+      requests:
+        cpu: 1
+        memory: 2Gi
+    hpa:
+      cpu:
+        targetType: Utilization
+        targetAverageUtilization: 80
+  migrations:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+  toolbox:
+    enabled: false  
+prometheus:
+  install: false
+upgradeCheck:
+  enabled: false
+registry:
+  enabled: false
+gitlab-runner:
+  gitlabUrl: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+  runners:
+    config: |
+      [[runners]]
+        [runners.kubernetes]
+          image = "ubuntu:22.04"
+          cpu_limit = "2"
+          memory_limit = "4Gi"
+          privileged = true

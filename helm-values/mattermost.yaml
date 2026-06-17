@@ -1,0 +1,17 @@
+mattermostCR:
+  enabled: true
+  name: mattermost
+  spec:
+    version: 11.8.0
+    size: 100user
+    replicas: 1
+    database:
+      external:
+        secret: ${db_connection_string_secret_name}
+    fileStore:
+      external:
+        url: ${bucket_endpoint}
+        bucket: ${bucket_name}
+        useServiceAccount: true
+    ingress:
+      enabled: false

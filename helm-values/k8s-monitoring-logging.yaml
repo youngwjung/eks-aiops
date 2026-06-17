@@ -1,0 +1,48 @@
+cluster:
+  name: ${cluster_name}
+alloy-operator:
+  ownNamespaceOnly: true
+collectors:
+  alloy-logs:
+    presets: [filesystem-log-reader, daemonset]
+    controller:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: eks.amazonaws.com/compute-type
+                  operator: NotIn
+                  values:
+                    - fargate
+  alloy-singleton:
+    presets: [singleton]
+destinations:
+  loki:
+    type: loki
+    url: http://loki-gateway.logging.svc.cluster.local/loki/api/v1/push
+podLogsViaLoki:
+  enabled: true
+  collector: alloy-logs
+  excludeNamespaces:
+  - logging
+  - monitoring
+  - tracing
+  - external-dns
+  - gitlab
+  - argocd
+podLogsViaKubernetesApi:
+  enabled: true
+  collector: alloy-singleton
+  namespaces:
+  - karpenter
+nodeLogs:
+  enabled: true
+  collector: alloy-logs
+  journal:
+    units:
+    - kubelet
+clusterEvents:
+  enabled: true
+  collector: alloy-singleton
+  jobLabel: kubernetes-events

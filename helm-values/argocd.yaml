@@ -1,0 +1,19 @@
+controller:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+server:
+  httproute:
+    enabled: true
+    hostnames:
+    - ${hostname}
+    parentRefs:
+    - name: ${gateway_name}
+      namespace: ${gateway_namespace}
+      sectionName: ${gateway_listener}
+configs:
+  secret:
+    argocdServerAdminPassword: ${server_admin_password}
+  params:
+    "server.insecure": true

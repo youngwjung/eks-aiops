@@ -1,0 +1,19 @@
+global:
+  objstore:
+    secretName: ${thanos_objconfig_secret_name}
+  serviceMonitor:
+    enabled: true
+query:
+  httpRoute:
+    enabled: true
+    hostnames:
+    - ${query_hostname}
+    parentRefs:
+    - name: ${gateway_name}
+      namespace: ${gateway_namespace}
+      sectionName: ${gateway_listener}
+  endpoints:
+    static:
+    - dnssrv+_grpc._tcp.prometheus-operated.monitoring.svc.cluster.local:10901
+receive:
+  enabled: false

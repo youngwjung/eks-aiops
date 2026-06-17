@@ -1,0 +1,39 @@
+cluster:
+  name: ${cluster_name}
+alloy-operator:
+  ownNamespaceOnly: true
+collectors:
+  alloy-receiver:
+    presets: [singleton]
+destinations:
+  tempo:
+    type: otlp
+    url: http://tempo-distributor.tracing.svc.cluster.local:4317
+    tls:
+      insecure: true
+    metrics:
+      enabled: false
+    logs:
+      enabled: false
+applicationObservability:
+  enabled: true
+  collector: alloy-receiver
+  receivers:
+    otlp:
+      grpc:
+        enabled: true
+        port: 4317      
+      http:
+        enabled: true
+        port: 4318
+  connectors:
+    grafanaCloudMetrics:
+      enabled: false
+    spanMetrics:
+      enabled: false
+  traces:
+    enabled: true
+  metrics:
+    enabled: false
+  logs:
+    enabled: false   

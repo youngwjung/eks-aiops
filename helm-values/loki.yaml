@@ -1,0 +1,80 @@
+deploymentMode: Distributed
+loki:
+  auth_enabled: false
+  schemaConfig:
+    configs:
+    - from: "2026-06-01"
+      store: tsdb
+      object_store: s3
+      schema: v13
+      index:
+        prefix: loki_index_
+        period: 24h
+  storage_config:
+    aws:
+      region: ${s3_bucket_region}
+      bucketnames: ${s3_bucket}
+      s3forcepathstyle: false
+  storage:
+    s3:
+      region: ${s3_bucket_region}
+    bucketNames:
+      chunks: ${s3_bucket}
+      ruler: ${s3_bucket}
+  querier:
+    max_concurrent: 4
+  ingester:
+    chunk_encoding: snappy
+  pattern_ingester:
+    enabled: true
+  limits_config:
+    allow_structured_metadata: true
+    volume_enabled: true
+    retention_period: 672h
+  compactor:
+    retention_enabled: true
+    delete_request_store: s3
+  ruler:
+    enable_api: true
+    storage:
+      type: s3
+      s3:
+        region: ${s3_bucket_region}
+        bucketnames:  ${s3_bucket}
+        s3forcepathstyle: false
+      alertmanager_url: http://prometheus-alertmanager.monitoring.svc.cluster.local:9093
+ingester:
+  replicas: 3
+  zoneAwareReplication:
+    enabled: false
+querier:
+  replicas: 3
+  maxUnavailable: 2
+queryFrontend:
+  replicas: 2
+  maxUnavailable: 1
+queryScheduler:
+  replicas: 2
+distributor:
+  replicas: 3
+  maxUnavailable: 2
+compactor:
+  replicas: 1
+indexGateway:
+  replicas: 2
+  maxUnavailable: 1
+ruler:
+  replicas: 1
+  maxUnavailable: 1
+backend:
+  replicas: 0
+read:
+  replicas: 0
+write:
+  replicas: 0
+singleBinary:
+  replicas: 0
+lokiCanary:
+  enabled: false
+test:
+  enabled: false
